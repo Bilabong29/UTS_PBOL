@@ -1,3 +1,4 @@
+package com.mycompany.uts_pbol;
 
 import java.awt.*;
 import javax.swing.*;
@@ -5,45 +6,52 @@ import javax.swing.*;
 public class BankSederhanaFrame extends JFrame {
 
     public BankSederhanaFrame() {
-        // Set frame properties
+        initializeFrame();
+        
+        JPanel backgroundPanel = createBackgroundPanel();
+        JPanel bankPanel = createBankPanel();
+        JPanel buttonPanel = createButtonPanel();
+
+        backgroundPanel.add(bankPanel, BorderLayout.CENTER);
+        backgroundPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(backgroundPanel);
+    }
+
+    private void initializeFrame() {
         setTitle("Bank Sederhana");
-        setSize(500, 700);
+        setSize(500, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+    }
 
-        // Background panel to hold all components with padding
+    private JPanel createBackgroundPanel() {
         JPanel backgroundPanel = new JPanel(new BorderLayout(0, 20));
         backgroundPanel.setBackground(new Color(240, 240, 255));
         backgroundPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        return backgroundPanel;
+    }
 
-        // Panel for the logo and bank name
+    private JPanel createBankPanel() {
         JPanel bankPanel = new JPanel();
         bankPanel.setLayout(new BoxLayout(bankPanel, BoxLayout.Y_AXIS));
         bankPanel.setOpaque(false);
 
-        // Bank name label
-        JLabel bankLabel = new JLabel("BSA", SwingConstants.CENTER);
-        bankLabel.setFont(new Font("Serif", Font.BOLD, 100));
-        bankLabel.setForeground(new Color(0, 0, 0));
-        bankLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel bankLabel = createLabel("BSA", new Font("Serif", Font.BOLD, 100), Color.BLACK);
+        JLabel subtitleLabel = createLabel("Bank Sederhana", new Font("SansSerif", Font.PLAIN, 18), new Color(80, 80, 80));
 
-        // Subtitle label
-        JLabel subtitleLabel = new JLabel("Bank Sederhana");
-        subtitleLabel.setFont(new Font("SansSerif", Font.PLAIN, 18));
-        subtitleLabel.setForeground(new Color(80, 80, 80));
-        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Add labels to the logo panel with spacing
         bankPanel.add(bankLabel);
         bankPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         bankPanel.add(subtitleLabel);
 
-        // Panel for the login button
+        return bankPanel;
+    }
+
+    private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
 
-        // Custom "Login" button
         JButton loginButton = new JButton("Login") {
             @Override
             protected void paintComponent(Graphics g) {
@@ -77,18 +85,21 @@ public class BankSederhanaFrame extends JFrame {
         loginButton.setFocusPainted(false);
         loginButton.setBorderPainted(false);
 
-        loginButton.addActionListener(e ->{
-        new LoginFrame().setVisible(true); // Membuka LoginFrame
-        dispose();
-    });
+        loginButton.addActionListener(e -> {
+            LoginDialog loginDialog = new LoginDialog(this);
+            loginDialog.setVisible(true);
+        });
+
         buttonPanel.add(loginButton);
+        return buttonPanel;
+    }
 
-        // Add components to the background panel
-        backgroundPanel.add(bankPanel, BorderLayout.CENTER);
-        backgroundPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        // Add the background panel to the frame
-        add(backgroundPanel);
+    private JLabel createLabel(String text, Font font, Color color) {
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        label.setFont(font);
+        label.setForeground(color);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
     }
 
     public static void main(String[] args) {
